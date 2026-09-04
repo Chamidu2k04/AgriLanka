@@ -3,18 +3,14 @@ const mongoose = require('mongoose');
 /**
  * ===============================================================
  * USER MODEL (Assigned to: Member A - Auth & Role Management)
+ * Student ID: IT24101966
  * ===============================================================
- * Data Model Requirements (from README Section 6):
+ * Data Model Requirements:
  * - fullName: String, Required, trimmed
- * - phone: String, Required, unique, regex: /^[0-9]{10}$/
+ * - phone: String, Required, unique, regex: /^[0-9]{10}$/ (10-digit Sri Lankan phone)
  * - password: String, Required, hashed using bcryptjs (min length: 6)
  * - role: String, Enum: ['Farmer', 'Buyer'], default: 'Farmer'
- * - district: String, Required
- * 
- * Member A Tasks:
- * 1. Review and finalize field validation rules and error messages.
- * 2. (Optional) Add a pre-save hook for password hashing with bcryptjs,
- *    or handle hashing inside controllers/authController.js.
+ * - district: String, Required, trimmed
  * ===============================================================
  */
 

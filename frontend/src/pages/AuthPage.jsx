@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 /**
  * ===============================================================
  * AUTH PAGE (Assigned to: Member A - Auth & Role Management Slice)
+ * Student ID: IT24101966
  * ===============================================================
  * Member A Tasks:
  * 1. Implement tab toggling (Login vs Register)
@@ -58,21 +59,24 @@ export const AuthPage = ({ onAuthSuccess }) => {
     if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: null });
   };
 
-  // TODO: Member A - Handle Login
+  // Handle Login form submission
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
+    // 1. Phone number validation
     if (!loginForm.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (!phoneRegex.test(loginForm.phone)) {
+    } else if (!phoneRegex.test(loginForm.phone.trim())) {
       newErrors.phone = 'Enter a valid 10-digit Sri Lankan phone number (e.g. 0771234567)';
     }
 
+    // 2. Password validation
     if (!loginForm.password) {
       newErrors.password = 'Password is required';
     }
 
+    // Stop submission if validation errors exist
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -83,8 +87,7 @@ export const AuthPage = ({ onAuthSuccess }) => {
     setStatusMessage('');
 
     try {
-      console.log('Member A TODO: Attempting login with:', loginForm);
-      await login(loginForm.phone, loginForm.password);
+      await login(loginForm.phone.trim(), loginForm.password);
       if (onAuthSuccess) onAuthSuccess();
     } catch (err) {
       setErrors({ form: err.message || 'Login failed. Please check your credentials.' });
@@ -93,23 +96,34 @@ export const AuthPage = ({ onAuthSuccess }) => {
     }
   };
 
-  // TODO: Member A - Handle Register
+  // Handle Register form submission
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    if (!registerForm.fullName.trim()) newErrors.fullName = 'Full name is required';
+    // 1. Full name validation
+    if (!registerForm.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    }
     
+    // 2. Phone number validation
     if (!registerForm.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (!phoneRegex.test(registerForm.phone)) {
+    } else if (!phoneRegex.test(registerForm.phone.trim())) {
       newErrors.phone = 'Enter a valid 10-digit Sri Lankan phone number (e.g. 0771234567)';
     }
 
+    // 3. Password validation (min 6 characters)
     if (!registerForm.password || registerForm.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
 
+    // 4. District validation
+    if (!registerForm.district) {
+      newErrors.district = 'District is required';
+    }
+
+    // Stop submission if validation errors exist
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -120,11 +134,14 @@ export const AuthPage = ({ onAuthSuccess }) => {
     setStatusMessage('');
 
     try {
-      console.log('Member A TODO: Attempting register with:', registerForm);
-      await register(registerForm);
+      await register({
+        ...registerForm,
+        fullName: registerForm.fullName.trim(),
+        phone: registerForm.phone.trim(),
+      });
       if (onAuthSuccess) onAuthSuccess();
     } catch (err) {
-      setErrors({ form: err.message || 'Registration failed.' });
+      setErrors({ form: err.message || 'Registration failed. Please try again.' });
     } finally {
       setLoading(false);
     }
@@ -309,6 +326,7 @@ export const AuthPage = ({ onAuthSuccess }) => {
                       <option key={d} value={d}>{d}</option>
                     ))}
                   </select>
+                  {errors.district && <p className="mt-1 text-xs text-red-600 font-medium">{errors.district}</p>}
                 </div>
               </div>
 

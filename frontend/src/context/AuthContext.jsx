@@ -19,46 +19,53 @@ import api from '../services/api';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  // Safely initialize user from localStorage on load
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('agri_user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('agri_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (e) {
+      console.error('Failed to parse agri_user from localStorage:', e);
+      return null;
+    }
   });
 
+  // Initialize JWT token from localStorage on load
   const [token, setToken] = useState(() => {
     return localStorage.getItem('agri_token') || null;
   });
 
   const [loading, setLoading] = useState(false);
 
-  // TODO: Member A - Implement login function
+  // Authenticate user with phone & password
   const login = async (phone, password) => {
     setLoading(true);
     try {
-      // Example call:
-      // const res = await api.post('/auth/login', { phone, password });
-      // setUser(res.user);
-      // setToken(res.token);
-      // localStorage.setItem('agri_token', res.token);
-      // localStorage.setItem('agri_user', JSON.stringify(res.user));
-      console.log('Member A TODO: login() with:', { phone, password });
-      throw new Error('login() is not yet implemented by Member A');
+      const res = await api.post('/auth/login', { phone, password });
+      if (res && res.token && res.user) {
+        setUser(res.user);
+        setToken(res.token);
+        localStorage.setItem('agri_token', res.token);
+        localStorage.setItem('agri_user', JSON.stringify(res.user));
+      }
+      return res;
     } finally {
       setLoading(false);
     }
   };
 
-  // TODO: Member A - Implement register function
+  // Register a new Farmer or Buyer
   const register = async (userData) => {
     setLoading(true);
     try {
-      // Example call:
-      // const res = await api.post('/auth/register', userData);
-      // setUser(res.user);
-      // setToken(res.token);
-      // localStorage.setItem('agri_token', res.token);
-      // localStorage.setItem('agri_user', JSON.stringify(res.user));
-      console.log('Member A TODO: register() with:', userData);
-      throw new Error('register() is not yet implemented by Member A');
+      const res = await api.post('/auth/register', userData);
+      if (res && res.token && res.user) {
+        setUser(res.user);
+        setToken(res.token);
+        localStorage.setItem('agri_token', res.token);
+        localStorage.setItem('agri_user', JSON.stringify(res.user));
+      }
+      return res;
     } finally {
       setLoading(false);
     }

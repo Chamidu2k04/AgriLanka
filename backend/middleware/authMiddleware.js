@@ -25,24 +25,33 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
     }
 
+    // If no token was found in the header
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized, no token provided',
+        message: 'Not authorized, please log in',
       });
     }
 
-    // TODO: Member A - Verify JWT token and attach user to req.user
-    // Example:
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_super_secret_jwt_key_agrilanka_2026');
-    // req.user = await User.findById(decoded.id).select('-password');
-    // next();
+    // Verify token using JWT secret
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || 'agrilanka_jwt_secret_key_2026'
+    );
 
-    // TEMPORARY STUB (so routes don't crash before Member A finishes):
-    return res.status(501).json({
-      success: false,
-      message: 'TODO (Member A): Implement JWT verification in middleware/authMiddleware.js',
-    });
+    // Fetch user from database excluding password field
+    const user = await User.findById(decoded.id).select('-password');
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'User no longer exists or session expired',
+      });
+    }
+
+    // Attach authenticated user to request object
+    req.user = user;
+    next();
   } catch (error) {
     console.error('Auth middleware error:', error.message);
     return res.status(401).json({
