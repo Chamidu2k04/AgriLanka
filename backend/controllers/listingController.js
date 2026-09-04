@@ -78,31 +78,91 @@ const getListingById = async (req, res) => {
 // @access  Private (Farmer only)
 const createListing = async (req, res) => {
   try {
+    // 1. Verify authenticated user is present (attached by auth middleware)
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: You must be logged in to post a harvest batch',
+      });
+    }
+
     const { cropName, category, quantityKg, unitPriceLkr, district } = req.body;
 
-    /**
-     * TODO: Member D Tasks:
-     * 1. Validate required fields: cropName, category, quantityKg, unitPriceLkr, district
-     * 2. Extract authenticated farmer data from req.user (set by Member A's authMiddleware):
-     *    const farmerId = req.user._id;
-     *    const farmerName = req.user.fullName;
-     *    const farmerPhone = req.user.phone;
-     * 3. (Optional rule): Ensure req.user.role === 'Farmer'
-     * 4. Create new listing document in MongoDB:
-     *    const listing = await Listing.create({ cropName, category, quantityKg, unitPriceLkr, district, farmerId, farmerName, farmerPhone });
-     * 5. Return res.status(201).json({ success: true, data: listing });
-     */
+    // 2. Validate required fields with student-friendly error messages (Rubric #5)
+    if (!cropName || typeof cropName !== 'string' || !cropName.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid crop name (e.g. Nuwara Eliya Carrots)',
+      });
+    }
 
-    console.log('Member D - createListing called with body:', req.body);
+    const validCategories = ['Vegetables', 'Fruits', 'Grains', 'Spices'];
+    if (!category || !validCategories.includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please select a valid category (Vegetables, Fruits, Grains, or Spices)',
+      });
+    }
 
-    return res.status(501).json({
-      success: false,
-      message: 'TODO (Member D): Implement createListing in controllers/listingController.js',
-      receivedData: req.body,
+    const parsedQty = Number(quantityKg);
+    if (quantityKg === undefined || quantityKg === null || isNaN(parsedQty) || parsedQty < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Available quantity must be at least 1 kg',
+      });
+    }
+
+    const parsedPrice = Number(unitPriceLkr);
+    if (unitPriceLkr === undefined || unitPriceLkr === null || isNaN(parsedPrice) || parsedPrice < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Wholesale unit price must be at least 1 LKR per kg',
+      });
+    }
+
+    if (!district || typeof district !== 'string' || !district.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please specify the production district or region',
+      });
+    }
+
+    // 3. Extract farmer details from authenticated user session
+    const farmerId = req.user._id;
+    const farmerName = req.user.fullName || 'Registered Farmer';
+    const farmerPhone = req.user.phone || '0770000000';
+
+    // 4. Create new harvest batch document in MongoDB
+    const listing = await Listing.create({
+      cropName: cropName.trim(),
+      category,
+      quantityKg: parsedQty,
+      unitPriceLkr: parsedPrice,
+      district: district.trim(),
+      farmerId,
+      farmerName,
+      farmerPhone,
+      status: 'Available',
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: 'Harvest batch published successfully to Agri Lanka marketplace',
+      data: listing,
     });
   } catch (error) {
     console.error('createListing error:', error.message);
-    return res.status(500).json({ success: false, message: error.message });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to create harvest listing. Please try again later.',
+      error: error.message,
+    });
   }
 };
 
