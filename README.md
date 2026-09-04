@@ -7,7 +7,7 @@
 ## 1. Project Links & Live Deployment
 * **Live Deployed Application (Vercel):** [https://agri-lanka.vercel.app](https://agri-lanka.vercel.app)
 * **GitHub Repository:** [https://github.com/Chamidu2k04/AgriLanka](https://github.com/Chamidu2k04/AgriLanka)
-* **2-Minute Demonstration Video:** [OneDrive / Video Demonstration Link]([https://1drv.ms/v/s!your-link-here](https://mysliit-my.sharepoint.com/:v:/g/personal/it24101966_my_sliit_lk/IQDni6sVDak9TqRTIS8OlXG2AWCdaEcjBfp-Q-052VZQn4M?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=KESZvV))
+* **Demo Video:** [Watch 2-Minute Demonstration](https://mysliit-my.sharepoint.com/:v:/g/personal/it24101966_my_sliit_lk/IQDni6sVDak9TqRTIS8OlXG2AWCdaEcjBfp-Q-052VZQn4M?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=KESZvV)
 
 
 ---
