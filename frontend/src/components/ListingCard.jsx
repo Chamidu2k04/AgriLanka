@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapPin, Phone, MessageCircle, CheckCircle, Tag, Trash2, Calendar } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 
 /**
  * ===============================================================
@@ -18,20 +19,47 @@ import { useAuth } from '../context/AuthContext';
 
 export const ListingCard = ({ listing, onStatusChange, onDelete }) => {
   const { user } = useAuth();
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Safety fallback if no listing passed
   if (!listing) return null;
 
   // Check if logged in user is the owner of this harvest listing
-  const isOwner = user && (user._id === listing.farmerId || user.id === listing.farmerId);
+  const isOwner = user && String(user._id || user.id) === String(listing.farmerId);
 
-  /**
-   * TODO: Member C - Real-time calculation:
-   * Batch Value = Quantity (kg) * Unit Price (LKR)
-   */
-  const totalBatchValue = (listing.quantityKg || 0) * (listing.unitPriceLkr || 0);
+  const quantity = Number(listing.quantityKg) || 0;
+  const unitPrice = Number(listing.unitPriceLkr) || 0;
+  const totalBatchValue = quantity * unitPrice;
 
-  const isSold = listing.status === 'Sold';
+  const status = listing.status || 'Available';
+  const isSold = status === 'Sold';
+  const cleanedPhone = String(listing.farmerPhone || '').replace(/\D/g, '').replace(/^94/, '').replace(/^0/, '');
+
+  const handleStatusChange = async () => {
+    const newStatus = isSold ? 'Available' : 'Sold';
+    setIsUpdating(true);
+    try {
+      await api.patch(`/listings/${listing._id}/status`, { status: newStatus });
+      onStatusChange?.(listing._id, newStatus);
+    } catch (error) {
+      window.alert(error.message);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this listing?')) return;
+
+    setIsUpdating(true);
+    try {
+      await api.delete(`/listings/${listing._id}`);
+      onDelete?.(listing._id);
+    } catch (error) {
+      window.alert(error.message);
+      setIsUpdating(false);
+    }
+  };
 
   return (
     <div className={`bg-white rounded-xl shadow-sm border transition duration-200 overflow-hidden flex flex-col justify-between ${
@@ -55,7 +83,7 @@ export const ListingCard = ({ listing, onStatusChange, onDelete }) => {
               ? 'bg-gray-200 text-gray-700' 
               : 'bg-green-100 text-green-800 animate-pulse'
           }`}>
-            {listing.status || 'Available'}
+            {status}
           </span>
         </div>
 
@@ -81,11 +109,11 @@ export const ListingCard = ({ listing, onStatusChange, onDelete }) => {
         <div className="grid grid-cols-2 gap-2 p-3 bg-emerald-50/50 rounded-lg border border-emerald-100/80 my-3">
           <div>
             <span className="text-xs text-gray-500 block">Available Stock</span>
-            <span className="text-base font-bold text-gray-900">{listing.quantityKg} kg</span>
+            <span className="text-base font-bold text-gray-900">{quantity.toLocaleString()} kg</span>
           </div>
           <div>
             <span className="text-xs text-gray-500 block">Wholesale Rate</span>
-            <span className="text-base font-bold text-emerald-700">Rs. {listing.unitPriceLkr} <span className="text-xs font-normal">/kg</span></span>
+            <span className="text-base font-bold text-emerald-700">Rs. {unitPrice.toLocaleString()} <span className="text-xs font-normal">/kg</span></span>
           </div>
         </div>
 
@@ -111,7 +139,7 @@ export const ListingCard = ({ listing, onStatusChange, onDelete }) => {
           </a>
 
           <a
-            href={`https://wa.me/94${listing.farmerPhone?.replace(/^0/, '')}`}
+            href={`https://wa.me/94${cleanedPhone}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center space-x-1.5 py-2 px-3 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition"
@@ -125,7 +153,8 @@ export const ListingCard = ({ listing, onStatusChange, onDelete }) => {
         {isOwner && (
           <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
             <button
-              onClick={() => onStatusChange && onStatusChange(listing._id, isSold ? 'Available' : 'Sold')}
+              onClick={handleStatusChange}
+              disabled={isUpdating}
               className={`flex-1 py-1.5 px-3 rounded-md text-xs font-semibold flex items-center justify-center space-x-1 transition ${
                 isSold 
                   ? 'bg-amber-100 text-amber-800 hover:bg-amber-200' 
@@ -133,11 +162,12 @@ export const ListingCard = ({ listing, onStatusChange, onDelete }) => {
               }`}
             >
               <CheckCircle className="w-3.5 h-3.5" />
-              <span>{isSold ? 'Reactivate' : 'Mark as Sold'}</span>
+              <span>{isSold ? 'Reactivate as Available' : 'Mark as Sold'}</span>
             </button>
 
             <button
-              onClick={() => onDelete && onDelete(listing._id)}
+              onClick={handleDelete}
+              disabled={isUpdating}
               className="py-1.5 px-2.5 rounded-md text-xs font-semibold text-red-600 hover:bg-red-50 border border-red-200 transition"
               title="Delete Listing"
             >

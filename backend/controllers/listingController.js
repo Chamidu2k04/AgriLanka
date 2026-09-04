@@ -117,24 +117,33 @@ const updateListingStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    /**
-     * TODO: Member C Tasks:
-     * 1. Find the listing: const listing = await Listing.findById(id);
-     * 2. If not found, return 404
-     * 3. Check ownership: if (listing.farmerId.toString() !== req.user._id.toString()) return 403 Forbidden
-     * 4. Validate status is 'Available' or 'Sold'
-     * 5. Update listing.status = status; await listing.save();
-     * 6. Return res.status(200).json({ success: true, data: listing });
-     */
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
 
-    console.log('Member C - updateListingStatus called for ID:', id, 'status:', status);
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      return res.status(404).json({ success: false, message: 'Listing not found' });
+    }
 
-    return res.status(501).json({
-      success: false,
-      message: 'TODO (Member C): Implement updateListingStatus in controllers/listingController.js',
-      listingId: id,
-      newStatus: status,
-    });
+    if (listing.farmerId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are only authorized to update your own listings',
+      });
+    }
+
+    if (!['Available', 'Sold'].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Status must be either 'Available' or 'Sold'",
+      });
+    }
+
+    listing.status = status;
+    await listing.save();
+
+    return res.status(200).json({ success: true, data: listing });
   } catch (error) {
     console.error('updateListingStatus error:', error.message);
     return res.status(500).json({ success: false, message: error.message });
@@ -148,21 +157,27 @@ const deleteListing = async (req, res) => {
   try {
     const { id } = req.params;
 
-    /**
-     * TODO: Member C Tasks:
-     * 1. Find listing: const listing = await Listing.findById(id);
-     * 2. If not found, return 404
-     * 3. Check ownership: if (listing.farmerId.toString() !== req.user._id.toString()) return 403 Forbidden
-     * 4. Delete: await Listing.findByIdAndDelete(id);
-     * 5. Return res.status(200).json({ success: true, message: 'Listing removed successfully' });
-     */
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
 
-    console.log('Member C - deleteListing called for ID:', id);
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      return res.status(404).json({ success: false, message: 'Listing not found' });
+    }
 
-    return res.status(501).json({
-      success: false,
-      message: 'TODO (Member C): Implement deleteListing in controllers/listingController.js',
-      listingId: id,
+    if (listing.farmerId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are only authorized to delete your own listings',
+      });
+    }
+
+    await Listing.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Listing removed successfully',
     });
   } catch (error) {
     console.error('deleteListing error:', error.message);
