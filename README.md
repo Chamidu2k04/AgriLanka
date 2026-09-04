@@ -6,7 +6,7 @@
 
 ## 1. Project Links & Live Deployment
 * **Live Deployed Application (Vercel):** [https://agri-lanka.vercel.app](https://agri-lanka.vercel.app)
-* **Backend API Live Service (Render):** [https://agri-lanka-api.onrender.com](https://agri-lanka-api.onrender.com) 
+* **Backend API Live Service (Render):** [https://agri-lanka-api.onrender.com](https://agri-lanka-api.onrender.com)
 * **GitHub Repository:** [https://github.com/your-team/agri-lanka](https://github.com/your-team/agri-lanka)
 * **2-Minute Demonstration Video:** [OneDrive / Google Drive Public Video Link](https://1drv.ms/v/s!your-link-here)
 
@@ -46,7 +46,34 @@ Agri Lanka is a lightweight, mobile-first web application designed for fast, low
 
 ---
 
-## 6. AI Tools Used & Mandatory Declaration
+## 6. Data Models
+
+### `backend/models/User.js`
+| Field | Type | Validation / Rules |
+| :--- | :--- | :--- |
+| `fullName` | String | Required, trimmed |
+| `phone` | String | Required, unique, regex: `/^[0-9]{10}$/` |
+| `password` | String | Required, hashed using `bcryptjs` (min length: 6) |
+| `role` | String | Enum: `['Farmer', 'Buyer']`, default: `'Farmer'` |
+| `district` | String | Required |
+
+### `backend/models/Listing.js`
+| Field | Type | Validation / Rules |
+| :--- | :--- | :--- |
+| `cropName` | String | Required, trimmed |
+| `category` | String | Enum: `['Vegetables', 'Fruits', 'Grains', 'Spices']`, required |
+| `quantityKg` | Number | Required, min: 1 |
+| `unitPriceLkr`| Number | Required, min: 1 |
+| `farmerId` | ObjectId | Reference to `User` model, required |
+| `farmerName` | String | Denormalized for display performance |
+| `farmerPhone`| String | Denormalized for direct contact |
+| `district` | String | Required |
+| `status` | String | Enum: `['Available', 'Sold']`, default: `'Available'` |
+| `harvestDate`| Date | Default: `Date.now` |
+
+---
+
+## 7. AI Tools Used & Mandatory Declaration
 
 ### Declaration
 AI tools (Claude 3.5 Sonnet, ChatGPT) were utilized throughout this 4-hour hackathon for boilerplate structuring, schema refinement, and responsive CSS styling. Every line of code generated was reviewed, modified, and verified for correct business logic and security by team members.
@@ -61,18 +88,18 @@ AI tools (Claude 3.5 Sonnet, ChatGPT) were utilized throughout this 4-hour hacka
 
 ---
 
-## 7. Team Members & Contributions
+## 8. Team Members & Contributions
 
 | Member Name | Student ID | Vertical Slice Role | Exact Features & Modules Implemented |
 | :--- | :--- | :--- | :--- |
-| **[Student 1 Name]** | ITxxxxxxxx | **Member A (Auth & Validation Slice)** | • `backend/models/User.js` & `backend/controllers/authController.js`<br>• Implemented JWT token generation and authentication middleware<br>• Built `frontend/src/pages/AuthPage.jsx` (Login/Registration views)<br>• Developed regex-based Sri Lankan phone validation logic and error alert banners |
-| **[Student 2 Name]** | ITxxxxxxxx | **Member B (Browse & Filter Slice)** | • `getListings` API controller supporting query parameters (`category`, `district`, `search`)<br>• Built `frontend/src/pages/BrowseListingsPage.jsx`<br>• Created dynamic search bar and category pill toggle filters<br>• Integrated listing container grid mapped directly to listing card components |
-| **[Student 3 Name]** | ITxxxxxxxx | **Member C (Card, Actions & Calc Slice)** | • `updateListingStatus` (PATCH) and `deleteListing` (DELETE) API endpoints<br>• Built isolated `frontend/src/components/ListingCard.jsx` component<br>• Implemented real-time batch calculation: `quantityKg * unitPriceLkr`<br>• Added owner-controlled "Mark as Sold" toggle and UI status badge switching |
-| **[Student 4 Name]** | ITxxxxxxxx | **Member D (Post Form, Infra & Ship Slice)** | • Initialized monorepo, Vite/Express boilerplates, and MongoDB Atlas connection<br>• Deployed live frontend to Vercel and backend to Render<br>• Built `frontend/src/pages/PostListingPage.jsx` and responsive `Navbar.jsx`<br>• Created `seedData.js`, in-app problem description modal, and managed the demo recording & PDF submission |
+| **[Student 1 Name]** | ITxxxxxxxx | **Member A (Auth & Role Management Slice)** | • Backend: `models/User.js`, `controllers/authController.js` (`/register`, `/login`), `middleware/authMiddleware.js`<br>• Frontend: `pages/AuthPage.jsx` (Tabs for Register/Login, 10-digit SL phone validation, error alerts)<br>• Stored JWT in `localStorage`, managed auth state persistence |
+| **[Student 2 Name]** | ITxxxxxxxx | **Member B (Browse & Filter Slice)** | • Backend: `getListings` in `controllers/listingController.js` supporting query filters (`?category=&district=&search=`)<br>• Frontend: `pages/BrowseListingsPage.jsx` (Search input, category pill filters, responsive grid layout)<br>• Mapped listings to `<ListingCard />` without modifying card internals |
+| **[Student 3 Name]** | ITxxxxxxxx | **Member C (Card, Actions & Calc Slice)** | • Backend: `updateListingStatus` (PATCH) and `deleteListing` (DELETE) with ownership rule (`req.user._id === listing.farmerId`)<br>• Frontend: `components/ListingCard.jsx`<br>• Implemented real-time batch calculation: `quantityKg * unitPriceLkr`<br>• Added owner-controlled "Mark as Sold" toggle, delete action, and contact buttons |
+| **[Student 4 Name]** | ITxxxxxxxx | **Member D (Post Form, Infra & Ship Slice)** | • Backend: `createListing` (POST) linking authenticated farmer ID; created `seedData.js`<br>• Frontend: `pages/PostListingPage.jsx` (Form with validation), `components/Navbar.jsx` with dynamic auth status, in-app problem banner<br>• Infrastructure: Repo setup, Vercel/Render deployment pipelines, demo video, and final PDF |
 
 ---
 
-## 8. Alignment with Minimum Functional Requirements
+## 9. Alignment with Minimum Functional Requirements
 
 | # | Rubric Minimum Requirement | Implementation in Agri Lanka |
 | :-: | :--- | :--- |
@@ -89,7 +116,7 @@ AI tools (Claude 3.5 Sonnet, ChatGPT) were utilized throughout this 4-hour hacka
 
 ---
 
-## 9. Installation & Local Development Setup
+## 10. Installation & Local Development Setup
 
 ### Prerequisites
 * Node.js (v18.0.0 or higher installed)
