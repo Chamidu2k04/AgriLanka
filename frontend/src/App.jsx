@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import ProblemBanner from './components/ProblemBanner';
+import LandingPage from './pages/LandingPage';
 import BrowseListingsPage from './pages/BrowseListingsPage';
 import PostListingPage from './pages/PostListingPage';
 import AuthPage from './pages/AuthPage';
-import { Code2, Users, CheckCircle2 } from 'lucide-react';
+import { Code2, Users, CheckCircle2, Heart } from 'lucide-react';
 
 export function App() {
-  const [currentTab, setCurrentTab] = useState('browse');
+  const [currentTab, setCurrentTab] = useState('home');
 
   return (
     <AuthProvider>
@@ -18,11 +19,22 @@ export function App() {
           <Navbar currentTab={currentTab} setCurrentTab={setCurrentTab} />
 
           {/* Sri Lankan Crisis & Helpline Context Banner (Rubric #2 & #10) */}
-          <ProblemBanner />
+          {currentTab !== 'home' && <ProblemBanner />}
 
           {/* Page Routing / Screen Switcher */}
           <main>
-            {currentTab === 'browse' && <BrowseListingsPage />}
+            {currentTab === 'home' && (
+              <LandingPage
+                onNavigateBrowse={() => setCurrentTab('browse')}
+                onNavigatePost={() => setCurrentTab('post')}
+                onNavigateAuth={() => setCurrentTab('auth')}
+              />
+            )}
+            {currentTab === 'browse' && (
+              <BrowseListingsPage 
+                onNavigatePost={() => setCurrentTab('post')} 
+              />
+            )}
             {currentTab === 'post' && (
               <PostListingPage 
                 onListingCreated={() => setCurrentTab('browse')} 
@@ -34,6 +46,7 @@ export function App() {
             )}
           </main>
         </div>
+
 
         {/* Student Hackathon Team Workstation Guide (Bottom Sticky / Footer) */}
         <footer className="mt-12 bg-white border-t border-gray-200 text-xs text-gray-600 py-6 px-4">

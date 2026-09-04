@@ -2,18 +2,26 @@ const mongoose = require('mongoose');
 
 /**
  * Connect to MongoDB database
- * Student Tip: Ensure your MONGO_URI in .env is set properly before starting the server.
+ * Reuses existing active connection for serverless / Vercel execution.
  */
 const connectDB = async () => {
+  // If connection is already open, skip reconnect
+  if (mongoose.connection.readyState >= 1) {
+    return mongoose.connection;
+  }
+
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/agrilanka');
+    const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/agrilanka';
+    const conn = await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 5000,
+    });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    return conn;
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
-    // Do not exit process in development if Mongo is not running yet,
-    // so students can still run the server and test health check routes.
-    console.warn('⚠️  Continuing without active DB connection. Set MONGO_URI in .env to connect to your database.');
+    console.warn('⚠️  Continuing without active DB connection. Verify MONGO_URI in environment variables.');
   }
 };
 
 module.exports = connectDB;
+

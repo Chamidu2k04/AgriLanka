@@ -1,0 +1,31 @@
+export const SRI_LANKAN_DISTRICTS = [
+  'Dambulla',
+  'Nuwara Eliya',
+  'Jaffna',
+  'Badulla',
+  'Welimada',
+  'Matale',
+  'Polonnaruwa',
+  'Kandy',
+  'Kurunegala',
+  'Anuradhapura',
+  'Colombo',
+  'Gampaha',
+  'Kalutara',
+  'Galle',
+  'Matara',
+  'Hambantota',
+  'Kegalle',
+  'Ratnapura',
+  'Monaragala',
+  'Ampara',
+  'Batticaloa',
+  'Trincomalee',
+  'Kilinochchi',
+  'Mannar',
+  'Vavuniya',
+  'Mullaitivu',
+  'Puttalam'
+];
+
+export default SRI_LANKAN_DISTRICTS;

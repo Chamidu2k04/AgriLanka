@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sprout, PlusCircle, LogIn, LogOut, User as UserIcon, LayoutGrid, MapPin } from 'lucide-react';
+import { Sprout, PlusCircle, LogIn, LogOut, User as UserIcon, LayoutGrid, MapPin, Home } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 /**
@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
  * NAVBAR COMPONENT (Assigned to: Member D - Post Form, Infra & Ship)
  * ===============================================================
  * Satisfies Rubric Requirement #8 ("Basic navigation between screens")
- * - Dynamic tab navigation between Browse, Post, and Auth
+ * - Dynamic tab navigation between Home, Browse, Post, and Auth
  * - Dynamic user authentication status display and logout
  * - Responsive layout for both desktop and mobile
  * ===============================================================
@@ -22,7 +22,7 @@ export const Navbar = ({ currentTab, setCurrentTab }) => {
         <div className="flex justify-between items-center h-16">
           {/* Brand Logo */}
           <div
-            onClick={() => setCurrentTab('browse')}
+            onClick={() => setCurrentTab('home')}
             className="flex items-center space-x-2.5 cursor-pointer group"
           >
             <div className="bg-emerald-600 group-hover:bg-emerald-700 text-white p-2 rounded-xl transition-all shadow-sm shadow-emerald-200">
@@ -40,6 +40,19 @@ export const Navbar = ({ currentTab, setCurrentTab }) => {
 
           {/* Navigation Links */}
           <nav className="flex items-center space-x-1 sm:space-x-3">
+            {/* Home / Overview Tab */}
+            <button
+              onClick={() => setCurrentTab('home')}
+              className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+                currentTab === 'home'
+                  ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              <Home className="w-4 h-4" />
+              <span>Home</span>
+            </button>
+
             {/* Browse Harvests Tab */}
             <button
               onClick={() => setCurrentTab('browse')}
@@ -52,6 +65,7 @@ export const Navbar = ({ currentTab, setCurrentTab }) => {
               <LayoutGrid className="w-4 h-4" />
               <span>Browse Harvests</span>
             </button>
+
 
             {/* Post Harvest Tab */}
             <button

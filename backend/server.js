@@ -3,31 +3,43 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-// Initialize database connection
+// Initialize database connection on cold start
 connectDB();
 
 const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: true,
   credentials: true,
 }));
 app.use(express.json());
 
+// Database connection assurance for serverless invocations
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('Database connection error in middleware:', err.message);
+  }
+  next();
+});
+
 // Base Health Check Route
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health', '/api'], (req, res) => {
   res.status(200).json({
     status: 'online',
     message: 'Agri Lanka API is running smoothly',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
+    environment: process.env.NODE_ENV || 'production',
   });
 });
 
-// Mount Routes
+// Mount Routes (both with and without /api prefix for seamless Vercel rewrites)
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/listings', require('./routes/listingRoutes'));
+app.use('/auth', require('./routes/authRoutes'));
+app.use('/listings', require('./routes/listingRoutes'));
 
 // 404 Route Handler
 app.use((req, res) => {
@@ -46,8 +58,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Agri Lanka Backend Server listening on http://localhost:${PORT}`);
-  console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
-});
+// Start listening only when executed directly (standalone/dev/Render mode)
+if (!process.env.VERCEL && require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Agri Lanka Backend Server listening on http://localhost:${PORT}`);
+    console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
+  });
+}
+
+module.exports = app;
+
+

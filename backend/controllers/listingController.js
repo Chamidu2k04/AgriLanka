@@ -38,13 +38,50 @@ const getListings = async (req, res) => {
     }
 
     // Fetch listings from MongoDB sorted by newest first
-    const listings = await Listing.find(filter).sort({ createdAt: -1 });
+    let listings = await Listing.find(filter).sort({ createdAt: -1 });
+
+    // Auto-seed sample Sri Lankan data if database is empty on initial query
+    if (listings.length === 0 && !search && (!category || category === 'All') && (!district || district === 'All Districts')) {
+      const count = await Listing.countDocuments();
+      if (count === 0) {
+        try {
+          const { sampleListings, sampleUsers } = require('../seedData');
+          const User = require('../models/User');
+          const bcrypt = require('bcryptjs');
+
+          let farmer = await User.findOne({ phone: '0771234567' });
+          if (!farmer) {
+            const password = await bcrypt.hash('password123', 10);
+            farmer = await User.create({
+              fullName: 'Bandara Senanayake',
+              phone: '0771234567',
+              password,
+              role: 'Farmer',
+              district: 'Dambulla',
+            });
+          }
+
+          const seededData = sampleListings.map((item) => ({
+            ...item,
+            farmerId: farmer._id,
+            farmerName: farmer.fullName,
+            farmerPhone: farmer.phone,
+          }));
+
+          await Listing.insertMany(seededData);
+          listings = await Listing.find(filter).sort({ createdAt: -1 });
+        } catch (seedErr) {
+          console.warn('Auto-seed check warning:', seedErr.message);
+        }
+      }
+    }
 
     return res.status(200).json({
       success: true,
       count: listings.length,
       data: listings,
     });
+
   } catch (error) {
     console.error('getListings error:', error.message);
     return res.status(500).json({

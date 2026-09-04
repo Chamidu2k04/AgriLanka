@@ -6,9 +6,9 @@
 
 ## 1. Project Links & Live Deployment
 * **Live Deployed Application (Vercel):** [https://agri-lanka.vercel.app](https://agri-lanka.vercel.app)
-* **Backend API Live Service (Render):** [https://agri-lanka-api.onrender.com](https://agri-lanka-api.onrender.com)
-* **GitHub Repository:** [https://github.com/your-team/agri-lanka](https://github.com/your-team/agri-lanka)
-* **2-Minute Demonstration Video:** [OneDrive / Google Drive Public Video Link](https://1drv.ms/v/s!your-link-here)
+* **GitHub Repository:** [https://github.com/Chamidu2k04/AgriLanka](https://github.com/Chamidu2k04/AgriLanka)
+* **2-Minute Demonstration Video:** [OneDrive / Video Demonstration Link](https://1drv.ms/v/s!your-link-here)
+
 
 ---
 
@@ -89,13 +89,14 @@ AI tools (Claude 3.5 Sonnet, ChatGPT) were utilized throughout this 4-hour hacka
 ---
 
 ## 8. Team Members & Contributions
-
+ 
 | Member Name | Student ID | Vertical Slice Role | Exact Features & Modules Implemented |
 | :--- | :--- | :--- | :--- |
-| **[Student 1 Name]** | ITxxxxxxxx | **Member A (Auth & Role Management Slice)** | • Backend: `models/User.js`, `controllers/authController.js` (`/register`, `/login`), `middleware/authMiddleware.js`<br>• Frontend: `pages/AuthPage.jsx` (Tabs for Register/Login, 10-digit SL phone validation, error alerts)<br>• Stored JWT in `localStorage`, managed auth state persistence |
-| **[Student 2 Name]** | ITxxxxxxxx | **Member B (Browse & Filter Slice)** | • Backend: `getListings` in `controllers/listingController.js` supporting query filters (`?category=&district=&search=`)<br>• Frontend: `pages/BrowseListingsPage.jsx` (Search input, category pill filters, responsive grid layout)<br>• Mapped listings to `<ListingCard />` without modifying card internals |
-| **[Student 3 Name]** | ITxxxxxxxx | **Member C (Card, Actions & Calc Slice)** | • Backend: `updateListingStatus` (PATCH) and `deleteListing` (DELETE) with ownership rule (`req.user._id === listing.farmerId`)<br>• Frontend: `components/ListingCard.jsx`<br>• Implemented real-time batch calculation: `quantityKg * unitPriceLkr`<br>• Added owner-controlled "Mark as Sold" toggle, delete action, and contact buttons |
-| **[Student 4 Name]** | ITxxxxxxxx | **Member D (Post Form, Infra & Ship Slice)** | • Backend: `createListing` (POST) linking authenticated farmer ID; created `seedData.js`<br>• Frontend: `pages/PostListingPage.jsx` (Form with validation), `components/Navbar.jsx` with dynamic auth status, in-app problem banner<br>• Infrastructure: Repo setup, Vercel/Render deployment pipelines, demo video, and final PDF |
+| **Yasas Wijeratne** | IT24101966 | **Member A (Auth & Role Management Slice)** | • Backend: `models/User.js`, `controllers/authController.js` (`/register`, `/login`, `/me`), `middleware/authMiddleware.js`<br>• Frontend: `pages/AuthPage.jsx` (Sign In / Register tabs, 10-digit SL phone validation, inline error alerts, 1-click test fill)<br>• Stored JWT in `localStorage`, managed auth state persistence via `AuthContext.jsx` |
+| **Tharani Thiwanka** | IT24102807 | **Member B (Browse & Filter Slice)** | • Backend: `getListings` in `controllers/listingController.js` supporting dynamic query filters (`?category=&district=&search=`)<br>• Frontend: `pages/BrowseListingsPage.jsx` (Debounced instant search, category pill filters, district dropdown, aggregate stats strip)<br>• Mapped listings to `<ListingCard />` with reactive state updates |
+| **Sithara Ravishani** | IT24102610 | **Member C (Card, Actions & Calc Slice)** | • Backend: `updateListingStatus` (PATCH) and `deleteListing` (DELETE) with ownership validation (`req.user._id === listing.farmerId`)<br>• Frontend: `components/ListingCard.jsx`<br>• Implemented real-time batch cost calculation: `quantityKg * unitPriceLkr`<br>• Added owner-controlled "Mark as Sold" toggle, delete action, direct phone & WhatsApp contact integration |
+| **Chamidu Lakshan** | Group Leader | **Member D (Post Form, Infra & Ship Slice)** | • Backend: `createListing` (POST) linking authenticated farmer ID; created realistic `seedData.js` across 5 provinces<br>• Frontend: `pages/PostListingPage.jsx` (Form with client validation and live batch cost preview), `pages/LandingPage.jsx`, `components/Navbar.jsx`, `components/ProblemBanner.jsx`<br>• Infrastructure: Repository setup, Vercel Serverless monorepo deployment configuration, and submission preparation |
+
 
 ---
 
