@@ -124,5 +124,49 @@ AI tools (Claude 3.5 Sonnet, ChatGPT) were utilized throughout this 4-hour hacka
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/your-team/agri-lanka.git](https://github.com/your-team/agri-lanka.git)
+git clone https://github.com/your-team/agri-lanka.git
 cd agri-lanka
+```
+
+### 2. Backend Setup
+```bash
+# Navigate to backend directory
+cd backend
+
+# Install dependencies
+npm install
+
+# Configure environment variables (a default .env is provided, or copy from .env.example)
+cp .env.example .env
+
+# Start the development server (runs with nodemon on port 5000)
+npm run dev
+
+# (Optional) Seed the database with sample Sri Lankan harvests
+npm run seed
+```
+
+### 3. Frontend Setup
+```bash
+# Open a new terminal and navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start the Vite development server (runs on port 5173)
+npm run dev
+```
+
+---
+
+## 11. Team Parallel Development Guide
+
+To avoid merge conflicts during the 4-hour build session, each team member works strictly inside their assigned files:
+
+| Member | Assigned Backend Files | Assigned Frontend Files | Primary Goal |
+| :--- | :--- | :--- | :--- |
+| **Member A** | `models/User.js`<br>`controllers/authController.js`<br>`middleware/authMiddleware.js` | `pages/AuthPage.jsx`<br>`context/AuthContext.jsx` | User Registration, Login, JWT tokens, 10-digit SL phone validation |
+| **Member B** | `controllers/listingController.js` (`getListings`) | `pages/BrowseListingsPage.jsx` | Search input, Category pills, District filter, render `<ListingCard />` |
+| **Member C** | `controllers/listingController.js` (`updateListingStatus`, `deleteListing`) | `components/ListingCard.jsx` | Dynamic total value calculation, Sold toggle, Delete button, Call/WhatsApp |
+| **Member D** | `controllers/listingController.js` (`createListing`)<br>`seedData.js` | `pages/PostListingPage.jsx`<br>`components/Navbar.jsx`<br>`components/ProblemBanner.jsx` | Harvest posting form, input validation, navigation status, crisis context |
