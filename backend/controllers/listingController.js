@@ -20,26 +20,38 @@ const getListings = async (req, res) => {
   try {
     const { search, category, district } = req.query;
 
-    /**
-     * TODO: Member B Tasks:
-     * 1. Build a filter object: const filter = {};
-     * 2. If `category` provided (and not 'All'): filter.category = category;
-     * 3. If `district` provided (and not 'All'): filter.district = district;
-     * 4. If `search` provided: use regex search on cropName (e.g. { cropName: { $regex: search, $options: 'i' } })
-     * 5. Fetch listings from DB sorted by newest: await Listing.find(filter).sort({ createdAt: -1 });
-     * 6. Return res.status(200).json({ success: true, count: listings.length, data: listings });
-     */
+    const filter = {};
 
-    console.log('Member B - getListings called with query:', { search, category, district });
+    // Filter by Category
+    if (category && category !== 'All') {
+      filter.category = category;
+    }
 
-    return res.status(501).json({
-      success: false,
-      message: 'TODO (Member B): Implement getListings with filters in controllers/listingController.js',
-      filtersReceived: { search, category, district },
+    // Filter by District
+    if (district && district !== 'All' && district !== 'All Districts') {
+      filter.district = district;
+    }
+
+    // Search by Crop Name (case-insensitive regex search)
+    if (search && search.trim() !== '') {
+      filter.cropName = { $regex: search.trim(), $options: 'i' };
+    }
+
+    // Fetch listings from MongoDB sorted by newest first
+    const listings = await Listing.find(filter).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: listings.length,
+      data: listings,
     });
   } catch (error) {
     console.error('getListings error:', error.message);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch harvest listings',
+      error: error.message,
+    });
   }
 };
 
