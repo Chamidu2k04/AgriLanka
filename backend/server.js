@@ -27,8 +27,13 @@ app.options('*', (req, res) => {
 
 app.use(express.json());
 
-// Serverless URL normalization (handles query subpaths or missing /api prefix)
+// Serverless URL normalization (restores original request path from Vercel headers or query)
 app.use((req, res, next) => {
+  const originalPath = req.headers['x-matched-path'] || req.headers['x-invoke-path'] || req.headers['x-forwarded-uri'];
+  if (originalPath && (req.url.startsWith('/api/index.js') || req.url === '/api' || req.url === '/')) {
+    req.url = originalPath;
+  }
+
   if (req.query && req.query.path) {
     const subpath = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
     if (subpath && !req.url.includes(subpath)) {
@@ -37,6 +42,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 
 // Database connection assurance for serverless invocations
 app.use(async (req, res, next) => {
