@@ -30,63 +30,28 @@ export const BrowseListingsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
 
-  // TODO: Member B - Implement fetchListings function
+  // Fetch listings from backend API
   const fetchListings = async () => {
     setLoading(true);
     setError(null);
     try {
       // Build query params
       const params = new URLSearchParams();
-      if (searchQuery) params.append('search', searchQuery);
+      if (searchQuery.trim()) params.append('search', searchQuery.trim());
       if (selectedCategory !== 'All') params.append('category', selectedCategory);
       if (selectedDistrict !== 'All Districts') params.append('district', selectedDistrict);
 
-      // Example API call:
-      // const res = await api.get(`/listings?${params.toString()}`);
-      // setListings(res.data || []);
+      const queryString = params.toString();
+      const endpoint = queryString ? `/listings?${queryString}` : '/listings';
       
-      console.log('Member B TODO: Fetch listings with params:', params.toString());
-
-      // TEMPORARY FALLBACK SAMPLE DATA so UI is immediately visible to preview
-      setListings([
-        {
-          _id: 'mock-1',
-          cropName: 'Dambulla Red Tomatoes',
-          category: 'Vegetables',
-          quantityKg: 350,
-          unitPriceLkr: 220,
-          district: 'Dambulla',
-          farmerName: 'Bandara Senanayake',
-          farmerPhone: '0771234567',
-          status: 'Available',
-          createdAt: new Date().toISOString(),
-        },
-        {
-          _id: 'mock-2',
-          cropName: 'Nuwara Eliya Leeks',
-          category: 'Vegetables',
-          quantityKg: 500,
-          unitPriceLkr: 180,
-          district: 'Nuwara Eliya',
-          farmerName: 'Bandara Senanayake',
-          farmerPhone: '0771234567',
-          status: 'Available',
-          createdAt: new Date().toISOString(),
-        },
-        {
-          _id: 'mock-3',
-          cropName: 'Jaffna Red Onions',
-          category: 'Vegetables',
-          quantityKg: 400,
-          unitPriceLkr: 450,
-          district: 'Jaffna',
-          farmerName: 'Kuganathan Nadarajah',
-          farmerPhone: '0719876543',
-          status: 'Sold',
-          createdAt: new Date().toISOString(),
-        },
-      ]);
+      const response = await api.get(endpoint);
+      if (response && response.success) {
+        setListings(response.data || []);
+      } else {
+        setListings(response?.data || []);
+      }
     } catch (err) {
+      console.error('Fetch listings error:', err);
       setError(err.message || 'Failed to load harvest listings');
     } finally {
       setLoading(false);
@@ -195,8 +160,8 @@ export const BrowseListingsPage = () => {
             <ListingCard
               key={item._id}
               listing={item}
-              onStatusChange={(id, newStatus) => console.log('Member C: toggle status', id, newStatus)}
-              onDelete={(id) => console.log('Member C: delete listing', id)}
+              onStatusChange={() => fetchListings()}
+              onDelete={() => fetchListings()}
             />
           ))}
         </div>
