@@ -6,7 +6,7 @@ import LandingPage from './pages/LandingPage';
 import BrowseListingsPage from './pages/BrowseListingsPage';
 import PostListingPage from './pages/PostListingPage';
 import AuthPage from './pages/AuthPage';
-import { Code2, Users, CheckCircle2, Heart } from 'lucide-react';
+import { Sprout, Phone, Mail, MapPin, ShieldCheck, Heart } from 'lucide-react';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState('home');
@@ -18,7 +18,7 @@ export function App() {
           {/* Main Top Navigation */}
           <Navbar currentTab={currentTab} setCurrentTab={setCurrentTab} />
 
-          {/* Sri Lankan Crisis & Helpline Context Banner (Rubric #2 & #10) */}
+          {/* Sri Lankan Crisis & Helpline Context Banner */}
           {currentTab !== 'home' && <ProblemBanner />}
 
           {/* Page Routing / Screen Switcher */}
@@ -26,7 +26,6 @@ export function App() {
             {currentTab === 'home' && (
               <LandingPage
                 onNavigateBrowse={() => setCurrentTab('browse')}
-                onNavigatePost={() => setCurrentTab('post')}
                 onNavigateAuth={() => setCurrentTab('auth')}
               />
             )}
@@ -47,33 +46,122 @@ export function App() {
           </main>
         </div>
 
+        {/* Real Production Application Footer */}
+        <footer className="mt-20 bg-emerald-950 text-gray-300 border-t border-emerald-900">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+              {/* Brand & Mission */}
+              <div className="space-y-3 md:col-span-1">
+                <div 
+                  onClick={() => setCurrentTab('home')}
+                  className="flex items-center space-x-2 cursor-pointer group"
+                >
+                  <div className="bg-emerald-600 text-white p-2 rounded-xl">
+                    <Sprout className="w-5 h-5" />
+                  </div>
+                  <span className="text-xl font-bold text-white tracking-tight">
+                    Agri<span className="text-emerald-400">Lanka</span>
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  A direct digital agricultural marketplace connecting farmers with commercial buyers across Sri Lanka. Fair trade, reduced food waste, and transparent wholesale pricing.
+                </p>
+                <div className="pt-1 flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <span>Direct Trade • Zero Middlemen</span>
+                </div>
+              </div>
 
-        {/* Student Hackathon Team Workstation Guide (Bottom Sticky / Footer) */}
-        <footer className="mt-12 bg-white border-t border-gray-200 text-xs text-gray-600 py-6 px-4">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center space-x-2 text-emerald-800">
-              <Users className="w-4 h-4 text-emerald-600" />
-              <span className="font-semibold">Agri Lanka Dev Team:</span>
-              <span className="text-gray-500">4-Member Parallel Slices Active</span>
+              {/* Quick Links */}
+              <div>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
+                  Quick Navigation
+                </h4>
+                <ul className="space-y-2.5 text-xs">
+                  <li>
+                    <button 
+                      onClick={() => { setCurrentTab('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="hover:text-emerald-400 transition cursor-pointer"
+                    >
+                      Home
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => { setCurrentTab('browse'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="hover:text-emerald-400 transition cursor-pointer"
+                    >
+                      Browse Produce
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => { setCurrentTab('post'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="hover:text-emerald-400 transition cursor-pointer"
+                    >
+                      Post a Listing
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => { setCurrentTab('auth'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="hover:text-emerald-400 transition cursor-pointer"
+                    >
+                      Sign In / Register
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Produce Categories */}
+              <div>
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
+                  Produce Categories
+                </h4>
+                <ul className="space-y-2.5 text-xs text-gray-400">
+                  <li className="hover:text-emerald-400 transition cursor-pointer" onClick={() => { setCurrentTab('browse'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    Fresh Vegetables (Tomatoes, Leeks, Onions)
+                  </li>
+                  <li className="hover:text-emerald-400 transition cursor-pointer" onClick={() => { setCurrentTab('browse'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    Tropical Fruits (Mangoes, Bananas, Papaya)
+                  </li>
+                  <li className="hover:text-emerald-400 transition cursor-pointer" onClick={() => { setCurrentTab('browse'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    Grains & Paddy (Samba, Keeri Samba, Nadu)
+                  </li>
+                  <li className="hover:text-emerald-400 transition cursor-pointer" onClick={() => { setCurrentTab('browse'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    Ceylon Spices (Pepper, Cinnamon, Cloves)
+                  </li>
+                </ul>
+              </div>
+
+              {/* Official Advisory & Support */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">
+                  National Support
+                </h4>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  For agricultural advisory, pest control, and harvest guidelines from the Department of Agriculture:
+                </p>
+                <a
+                  href="tel:1920"
+                  className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-emerald-900/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-200 text-xs font-semibold transition"
+                >
+                  <Phone className="w-3.5 h-3.5 text-amber-300" />
+                  <span>National Helpline: <strong>1920</strong></span>
+                </a>
+                <div className="text-[11px] text-gray-500 flex items-center gap-1.5 pt-1">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Serving all 25 Districts of Sri Lanka</span>
+                </div>
+              </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-[11px]">
-              <span className="px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded">
-                Member A: Auth & JWT
-              </span>
-              <span className="px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-200 rounded">
-                Member B: Browse & Filters
-              </span>
-              <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded">
-                Member C: Card, Calc & Actions
-              </span>
-              <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded">
-                Member D: Post Form & Deploy
-              </span>
-            </div>
-
-            <div className="text-gray-400">
-              SLIIT SE3090 — Year 3 Sem 1
+            {/* Bottom Copyright Bar */}
+            <div className="pt-8 border-t border-emerald-900/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+              <p>© {new Date().getFullYear()} AgriLanka. Direct Agricultural Marketplace. All rights reserved.</p>
+              <p className="flex items-center gap-1 text-gray-400">
+                Empowering Sri Lankan agriculture with transparent trade
+              </p>
             </div>
           </div>
         </footer>

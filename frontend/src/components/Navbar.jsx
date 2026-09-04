@@ -3,14 +3,8 @@ import { Sprout, PlusCircle, LogIn, LogOut, User as UserIcon, LayoutGrid, MapPin
 import { useAuth } from '../context/AuthContext';
 
 /**
- * ===============================================================
- * NAVBAR COMPONENT (Assigned to: Member D - Post Form, Infra & Ship)
- * ===============================================================
- * Satisfies Rubric Requirement #8 ("Basic navigation between screens")
- * - Dynamic tab navigation between Home, Browse, Post, and Auth
- * - Dynamic user authentication status display and logout
- * - Responsive layout for both desktop and mobile
- * ===============================================================
+ * Application Navigation Bar
+ * Global navigation across Home, Browse, Post, and Auth views.
  */
 
 export const Navbar = ({ currentTab, setCurrentTab }) => {
@@ -33,17 +27,17 @@ export const Navbar = ({ currentTab, setCurrentTab }) => {
                 Agri<span className="text-emerald-600">Lanka</span>
               </span>
               <span className="hidden sm:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-                Fair-Price Trade
+                Marketplace
               </span>
             </div>
           </div>
 
           {/* Navigation Links */}
           <nav className="flex items-center space-x-1 sm:space-x-3">
-            {/* Home / Overview Tab */}
+            {/* Home Tab */}
             <button
               onClick={() => setCurrentTab('home')}
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+              className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                 currentTab === 'home'
                   ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
@@ -53,32 +47,32 @@ export const Navbar = ({ currentTab, setCurrentTab }) => {
               <span>Home</span>
             </button>
 
-            {/* Browse Harvests Tab */}
+            {/* Browse Tab */}
             <button
               onClick={() => setCurrentTab('browse')}
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+              className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                 currentTab === 'browse'
                   ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
-              <span>Browse Harvests</span>
+              <span>Browse Produce</span>
             </button>
 
-
-            {/* Post Harvest Tab */}
+            {/* Post Listing Tab */}
             <button
               onClick={() => setCurrentTab('post')}
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+              className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                 currentTab === 'post'
                   ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-200 font-semibold'
                   : 'text-emerald-700 hover:bg-emerald-50'
               }`}
             >
               <PlusCircle className="w-4 h-4" />
-              <span>Post Harvest</span>
+              <span>Post Listing</span>
             </button>
+
 
             {/* Dynamic Authentication Controls */}
             {isAuthenticated ? (

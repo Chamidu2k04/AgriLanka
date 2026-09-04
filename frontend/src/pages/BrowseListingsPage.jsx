@@ -3,22 +3,16 @@ import { Search, Filter, RefreshCw, AlertCircle } from 'lucide-react';
 import ListingCard from '../components/ListingCard';
 import api from '../services/api';
 
+import { SRI_LANKAN_DISTRICTS } from '../constants/districts';
+
 /**
- * ===============================================================
- * BROWSE LISTINGS PAGE (Assigned to: Member B - Browse & Filter Slice)
- * ===============================================================
- * Member B Tasks:
- * 1. Fetch listings from backend API (GET /api/listings?search=&category=&district=)
- * 2. Implement real-time or debounce search by cropName
- * 3. Implement category pill filters: All, Vegetables, Fruits, Grains, Spices
- * 4. Implement district filter dropdown (Dambulla, Nuwara Eliya, Jaffna, Badulla, etc.)
- * 5. Handle loading and empty states cleanly
- * 6. Map results into <ListingCard key={item._id} listing={item} />
- * ===============================================================
+ * Browse Listings Page
+ * Explore and filter fresh agricultural harvests across Sri Lanka.
  */
 
 const CATEGORIES = ['All', 'Vegetables', 'Fruits', 'Grains', 'Spices'];
-const DISTRICTS = ['All Districts', 'Dambulla', 'Nuwara Eliya', 'Jaffna', 'Badulla', 'Welimada', 'Matale', 'Polonnaruwa', 'Kandy', 'Kurunegala'];
+const DISTRICTS = ['All Districts', ...SRI_LANKAN_DISTRICTS];
+
 
 export const BrowseListingsPage = () => {
   const [listings, setListings] = useState([]);

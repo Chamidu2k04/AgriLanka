@@ -4,18 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
 /**
- * ===============================================================
- * LISTING CARD COMPONENT (Assigned to: Member C - Card, Actions & Calc Slice)
- * ===============================================================
- * Member C Tasks:
- * 1. Implement dynamic batch calculation:
- *    totalValue = listing.quantityKg * listing.unitPriceLkr
- * 2. Connect "Mark as Sold" / "Mark as Available" button to PATCH /api/listings/:id/status
- * 3. Connect "Delete Listing" button to DELETE /api/listings/:id
- * 4. Display farmer contact buttons (Call & WhatsApp)
- * 5. Handle ownership state: Only show edit/delete if current user is owner (listing.farmerId === user._id)
- * ===============================================================
+ * Listing Card Component
+ * Displays produce details, pricing, batch calculations, and contact actions.
  */
+
 
 export const ListingCard = ({ listing, onStatusChange, onDelete }) => {
   const { user } = useAuth();

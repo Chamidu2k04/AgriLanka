@@ -3,18 +3,10 @@ import { User, Phone, Lock, MapPin, Briefcase, AlertCircle, CheckCircle } from '
 import { useAuth } from '../context/AuthContext';
 
 /**
- * ===============================================================
- * AUTH PAGE (Assigned to: Member A - Auth & Role Management Slice)
- * Student ID: IT24101966
- * ===============================================================
- * Member A Tasks:
- * 1. Implement tab toggling (Login vs Register)
- * 2. Validate Sri Lankan 10-digit phone format (/^[0-9]{10}$/)
- * 3. Validate password (min 6 characters)
- * 4. Connect to AuthContext (login / register methods)
- * 5. Handle error states with clear, friendly inline messages
- * ===============================================================
+ * User Authentication Page
+ * Handles login and registration for Farmers and Buyers.
  */
+
 
 const DISTRICTS = [
   'Dambulla', 'Nuwara Eliya', 'Jaffna', 'Badulla', 'Welimada', 
@@ -235,40 +227,10 @@ export const AuthPage = ({ onAuthSuccess }) => {
                 disabled={loading}
                 className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50 text-sm cursor-pointer shadow-sm shadow-emerald-200"
               >
-                {loading ? 'Signing in...' : 'Sign In to Agri Lanka'}
+                {loading ? 'Signing in...' : 'Sign In to AgriLanka'}
               </button>
-
-              {/* Quick Demo Fill Buttons for Hackathon Evaluators */}
-              <div className="mt-5 pt-4 border-t border-gray-100 text-center">
-                <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                  Evaluation 1-Click Demo Accounts
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLoginForm({ phone: '0771234567', password: 'password123' });
-                      setErrors({});
-                    }}
-                    className="py-2 px-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg border border-emerald-200 text-xs font-medium transition text-left cursor-pointer"
-                  >
-                    <span className="font-bold block text-[11px]">🌾 Demo Farmer</span>
-                    <span className="text-[10px] text-emerald-600 block">Bandara (0771234567)</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLoginForm({ phone: '0751122334', password: 'password123' });
-                      setErrors({});
-                    }}
-                    className="py-2 px-2.5 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-lg border border-blue-200 text-xs font-medium transition text-left cursor-pointer"
-                  >
-                    <span className="font-bold block text-[11px]">🛒 Demo Buyer</span>
-                    <span className="text-[10px] text-blue-600 block">Sunil (0751122334)</span>
-                  </button>
-                </div>
-              </div>
             </form>
+
 
           ) : (
             /* REGISTER FORM */

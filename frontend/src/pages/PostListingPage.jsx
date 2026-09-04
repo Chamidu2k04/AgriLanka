@@ -6,15 +6,10 @@ import { CROP_CATEGORIES } from '../constants/categories';
 import { SRI_LANKAN_DISTRICTS } from '../constants/districts';
 
 /**
- * ===============================================================
- * POST LISTING PAGE (Assigned to: Member D - Post Form & Validation)
- * ===============================================================
- * Satisfies Rubric Requirements:
- * - #4: User Input Form for Harvest Listings
- * - #5: Meaningful, friendly client-side validation rejecting invalid/empty inputs
- * - #6: Dynamic batch calculation (Total Value = Quantity * Unit Price)
- * ===============================================================
+ * Post Listing Page
+ * Form for farmers to publish fresh produce listings.
  */
+
 
 export const PostListingPage = ({ onListingCreated, onBackToBrowse }) => {
   const { user, isAuthenticated } = useAuth();
@@ -173,9 +168,9 @@ export const PostListingPage = ({ onListingCreated, onBackToBrowse }) => {
             <Sprout className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Post Harvest Surplus Batch</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Post a Produce Listing</h1>
             <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-              Connect directly with wholesale buyers and eliminate middleman loss
+              Connect directly with wholesale buyers across Sri Lanka
             </p>
           </div>
         </div>
@@ -185,10 +180,11 @@ export const PostListingPage = ({ onListingCreated, onBackToBrowse }) => {
           <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-sm flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold">Farmer Login Required:</span> You must be logged into a Farmer account to publish live harvest listings. You may preview and test the form inputs below.
+              <span className="font-semibold">Sign In Required:</span> You need to be logged into a Farmer account to publish produce listings. You can still preview and prepare your listing details below.
             </div>
           </div>
         )}
+
 
         {/* Global Error Banner */}
         {errors.form && (
