@@ -12,8 +12,31 @@ const app = express();
 app.use(cors({
   origin: true,
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 }));
+
+// Explicit OPTIONS preflight handler
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  return res.sendStatus(204);
+});
+
 app.use(express.json());
+
+// Serverless URL normalization (handles query subpaths or missing /api prefix)
+app.use((req, res, next) => {
+  if (req.query && req.query.path) {
+    const subpath = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
+    if (subpath && !req.url.includes(subpath)) {
+      req.url = `/api/${subpath}`;
+    }
+  }
+  next();
+});
 
 // Database connection assurance for serverless invocations
 app.use(async (req, res, next) => {
@@ -26,7 +49,7 @@ app.use(async (req, res, next) => {
 });
 
 // Base Health Check Route
-app.get(['/api/health', '/health', '/api'], (req, res) => {
+app.get(['/api/health', '/health', '/api', '/'], (req, res) => {
   res.status(200).json({
     status: 'online',
     message: 'Agri Lanka API is running smoothly',
@@ -40,6 +63,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/listings', require('./routes/listingRoutes'));
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/listings', require('./routes/listingRoutes'));
+
 
 // 404 Route Handler
 app.use((req, res) => {
